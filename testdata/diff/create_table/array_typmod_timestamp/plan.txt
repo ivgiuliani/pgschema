@@ -1,0 +1,16 @@
+Plan: 1 to modify.
+
+Summary by type:
+  tables: 1 to modify
+
+Tables:
+  ~ events
+    + occurred_at (column)
+    + occurred_at_tz (column)
+
+DDL to be executed:
+--------------------------------------------------
+
+ALTER TABLE events ADD COLUMN occurred_at timestamp(3)[];
+
+ALTER TABLE events ADD COLUMN occurred_at_tz timestamptz(3)[];
