@@ -82,13 +82,15 @@ WITH column_base AS (
                      ELSE dn.nspname || '.' || dt.typname
                 END
             WHEN dt.typtype = 'b' AND dt.typcategory = 'A' THEN
-                -- Array types: apply same schema qualification logic to element type
+                -- Array types: apply same schema qualification logic to element type.
                 -- Use typcategory = 'A' rather than typelem <> 0; the latter is true
                 -- for non-array fixed-length types like name (typelem points to char).
+                -- Use format_type on the array OID to preserve element typmod
+                -- (e.g. varchar(128)[] would otherwise be reduced to varchar[]).
                 CASE
-                    WHEN en.nspname = 'pg_catalog' THEN et.typname || '[]'
-                    WHEN en.nspname = c.table_schema THEN et.typname || '[]'
-                    ELSE en.nspname || '.' || et.typname || '[]'
+                    WHEN en.nspname = 'pg_catalog' THEN et.typname || COALESCE(substring(format_type(a.atttypid, a.atttypmod) FROM '\([^)]*\)'), '') || '[]'
+                    WHEN en.nspname = c.table_schema THEN et.typname || COALESCE(substring(format_type(a.atttypid, a.atttypmod) FROM '\([^)]*\)'), '') || '[]'
+                    ELSE en.nspname || '.' || et.typname || COALESCE(substring(format_type(a.atttypid, a.atttypmod) FROM '\([^)]*\)'), '') || '[]'
                 END
             WHEN dt.typtype = 'b' THEN
                 -- Non-array base types: qualify if not in pg_catalog or table's schema
@@ -200,13 +202,15 @@ WITH column_base AS (
                      ELSE dn.nspname || '.' || dt.typname
                 END
             WHEN dt.typtype = 'b' AND dt.typcategory = 'A' THEN
-                -- Array types: apply same schema qualification logic to element type
+                -- Array types: apply same schema qualification logic to element type.
                 -- Use typcategory = 'A' rather than typelem <> 0; the latter is true
                 -- for non-array fixed-length types like name (typelem points to char).
+                -- Use format_type on the array OID to preserve element typmod
+                -- (e.g. varchar(128)[] would otherwise be reduced to varchar[]).
                 CASE
-                    WHEN en.nspname = 'pg_catalog' THEN et.typname || '[]'
-                    WHEN en.nspname = c.table_schema THEN et.typname || '[]'
-                    ELSE en.nspname || '.' || et.typname || '[]'
+                    WHEN en.nspname = 'pg_catalog' THEN et.typname || COALESCE(substring(format_type(a.atttypid, a.atttypmod) FROM '\([^)]*\)'), '') || '[]'
+                    WHEN en.nspname = c.table_schema THEN et.typname || COALESCE(substring(format_type(a.atttypid, a.atttypmod) FROM '\([^)]*\)'), '') || '[]'
+                    ELSE en.nspname || '.' || et.typname || COALESCE(substring(format_type(a.atttypid, a.atttypmod) FROM '\([^)]*\)'), '') || '[]'
                 END
             WHEN dt.typtype = 'b' THEN
                 -- Non-array base types: qualify if not in pg_catalog or table's schema
