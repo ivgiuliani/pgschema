@@ -1,0 +1,19 @@
+Plan: 1 to modify.
+
+Summary by type:
+  tables: 1 to modify
+
+Tables:
+  ~ schedule
+    + duration (column)
+    + start_time (column)
+    + start_time_tz (column)
+
+DDL to be executed:
+--------------------------------------------------
+
+ALTER TABLE schedule ADD COLUMN start_time time(3)[];
+
+ALTER TABLE schedule ADD COLUMN start_time_tz timetz(3)[];
+
+ALTER TABLE schedule ADD COLUMN duration interval(3)[];

@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "pgschema_version": "1.9.0",
+  "created_at": "1970-01-01T00:00:00Z",
+  "source_fingerprint": {
+    "hash": "f31fdde8c33eb8ff2bc220edaac491275f8eed140525b33ceda4dc452c2f60e0"
+  },
+  "groups": [
+    {
+      "steps": [
+        {
+          "sql": "ALTER TABLE schedule ADD COLUMN start_time time(3)[];",
+          "type": "table.column",
+          "operation": "create",
+          "path": "public.schedule.start_time"
+        },
+        {
+          "sql": "ALTER TABLE schedule ADD COLUMN start_time_tz timetz(3)[];",
+          "type": "table.column",
+          "operation": "create",
+          "path": "public.schedule.start_time_tz"
+        },
+        {
+          "sql": "ALTER TABLE schedule ADD COLUMN duration interval(3)[];",
+          "type": "table.column",
+          "operation": "create",
+          "path": "public.schedule.duration"
+        }
+      ]
+    }
+  ]
+}
